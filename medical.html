@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Interactive Medical Center E-R Diagram</title>
+  <style>
+    /* CSS Styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .entity {
+      border: 1px solid #333;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .entity-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .attribute {
+      margin-bottom: 5px;
+    }
+    .relationship {
+      border: 1px dashed #333;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .relationship-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .relationship-description {
+      margin-bottom: 5px;
+    }
+    .selected {
+      background-color: yellow;
+    }
+  </style>
+  <script>
+    // JavaScript code
+    function highlightEntity(entityId) {
+      const entity = document.getElementById(entityId);
+      entity.classList.toggle('selected');
+    }
+
+    function highlightRelationship(relationshipId) {
+      const relationship = document.getElementById(relationshipId);
+      relationship.classList.toggle('selected');
+    }
+
+    function generateRandomData() {
+      const patientName = document.getElementById('patientName').value;
+      const patientDateOfBirth = document.getElementById('patientDateOfBirth').value;
+      const doctorName = document.getElementById('doctorName').value;
+
+      document.getElementById('patientNameOutput').innerText = "- Name: " + patientName;
+      document.getElementById('patientDateOfBirthOutput').innerText = "- DateOfBirth: " + patientDateOfBirth;
+      document.getElementById('doctorNameOutput').innerText = "- Name: " + doctorName;
+
+      assignAppointment(patientName, patientDateOfBirth, doctorName);
+    }
+
+    function assignAppointment(patientName, patientDateOfBirth, doctorName) {
+      const appointmentId = Math.floor(Math.random() * 10000) + 1;
+      const appointmentDate = getRandomAppointmentDate();
+      const appointmentTime = getRandomTime();
+
+      document.getElementById('appointmentId').innerText = "- AppointmentID: " + appointmentId;
+      document.getElementById('patientNameRelation').innerText = "- PatientName (Foreign key referencing Patient): " + patientName;
+      document.getElementById('patientDateOfBirthRelation').innerText = "- DateOfBirth: " + patientDateOfBirth;
+      document.getElementById('doctorNameRelation').innerText = "- DoctorName (Foreign key referencing Doctor): " + doctorName;
+      document.getElementById('appointmentDate').innerText = "- Date: " + appointmentDate;
+      document.getElementById('appointmentTime').innerText = "- Time: " + appointmentTime;
+    }
+
+    function getRandomTime() {
+      const hours = Math.floor(Math.random() * 24);
+      const minutes = Math.floor(Math.random() * 60);
+      const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+      return timeString;
+    }
+
+    function getRandomAppointmentDate() {
+      const start = new Date();
+      const end = new Date();
+      end.setDate(end.getDate() + 7); // Limit appointments within a week
+      const randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+      return randomDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    }
+  </script>
+</head>
+<body>
+  <div class="entity" id="patient" onclick="highlightEntity('patient')">
+    <h2 class="entity-title">Patient</h2>
+    <label for="patientName">Name:</label>
+    <input type="text" id="patientName" placeholder="Enter patient name">
+    <br>
+    <label for="patientDateOfBirth">Date of Birth:</label>
+    <input type="date" id="patientDateOfBirth">
+    <br>
+    <button onclick="generateRandomData()">Generate Random Data</button>
+    <p class="attribute" id="patientNameOutput"></p>
+    <p class="attribute" id="patientDateOfBirthOutput"></p>
+  </div>
+
+  <div class="entity" id="doctor" onclick="highlightEntity('doctor')">
+    <h2 class="entity-title">Doctor</h2>
+    <label for="doctorName">Name:</label>
+    <select id="doctorName">
+      <option value="Dr. John Doe">Dr. John Doe</option>
+      <option value="Dr. Jane Smith">Dr. Jane Smith</option>
+      <option value="Dr. Michael Johnson">Dr. Michael Johnson</option>
+    </select>
+    <p class="attribute" id="doctorNameOutput"></p>
+  </div>
+
+  <div class="relationship" id="appointment" onclick="highlightRelationship('appointment')">
+    <h2 class="relationship-title">Appointment</h2>
+    <p class="relationship-description" id="appointmentId"></p>
+    <p class="relationship-description" id="patientNameRelation"></p>
+    <p class="relationship-description" id="patientDateOfBirthRelation"></p>
+    <p class="relationship-description" id="doctorNameRelation"></p>
+    <p class="relationship-description" id="appointmentDate"></p>
+    <p class="relationship-description" id="appointmentTime"></p>
+  </div>
+</body>
+</html>

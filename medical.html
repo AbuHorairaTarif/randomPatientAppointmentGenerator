@@ -1,42 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Interactive Medical Center E-R Diagram</title>
+  <title>Interactive Medical Center Doctor Appointment Random Generator</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
-    /* CSS Styling */
+    /* Additional CSS Styling */
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-image: url('diagnosis-center.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
     }
-    .entity {
-      border: 1px solid #333;
-      padding: 10px;
-      margin-bottom: 20px;
+
+    .container {
+      max-width: 500px;
+      width: 100%;
     }
-    .entity-title {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .attribute {
-      margin-bottom: 5px;
-    }
+
+    .entity,
     .relationship {
-      border: 1px dashed #333;
-      padding: 10px;
       margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: rgba(255, 255, 255, 0.8);
     }
+
+    .entity-title,
     .relationship-title {
       font-weight: bold;
       margin-bottom: 10px;
     }
-    .relationship-description {
+
+    .attribute {
       margin-bottom: 5px;
     }
-    .selected {
-      background-color: yellow;
+
+    .btn-generate {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
     }
   </style>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     // JavaScript code
     function highlightEntity(entityId) {
@@ -91,38 +101,67 @@
   </script>
 </head>
 <body>
-  <div class="entity" id="patient" onclick="highlightEntity('patient')">
-    <h2 class="entity-title">Patient</h2>
-    <label for="patientName">Name:</label>
-    <input type="text" id="patientName" placeholder="Enter patient name">
-    <br>
-    <label for="patientDateOfBirth">Date of Birth:</label>
-    <input type="date" id="patientDateOfBirth">
-    <br>
-    <button onclick="generateRandomData()">Generate Random Data</button>
-    <p class="attribute" id="patientNameOutput"></p>
-    <p class="attribute" id="patientDateOfBirthOutput"></p>
+  <div class="container">
+    <div class="entity" id="patient" onclick="highlightEntity('patient')">
+      <h2 class="entity-title text-center">Patient Information</h2>
+      <div class="form-group">
+        <label for="patientName">Name:</label>
+        <input type="text" class="form-control" id="patientName" placeholder="Enter patient name">
+      </div>
+      <div class="form-group">
+        <label for="patientDateOfBirth">Date of Birth:</label>
+        <input type="date" class="form-control" id="patientDateOfBirth">
+      </div>
+      <div class="btn-generate">
+        <button class="btn btn-primary" onclick="generateRandomData()">Generate Random Data</button>
+      </div>
+      <p class="attribute text-danger text-center" id="patientNameOutput"></p>
+      <p class="attribute text-danger text-center" id="patientDateOfBirthOutput"></p>
+    </div>
+
+    <div class="entity" id="doctor" onclick="highlightEntity('doctor')">
+      <h2 class="entity-title text-center text-center">Doctor's Information</h2>
+      <div class="form-group">
+        <label for="doctorName">Name:</label>
+        <select class="form-control" id="doctorName">
+          <option value="Dr. John Doe">Dr. John Doe</option>
+          <option value="Dr. Jane Smith">Dr. Jane Smith</option>
+          <option value="Dr. Michael Johnson">Dr. Michael Johnson</option>
+        </select>
+      </div>
+      <p class="attribute text-danger text-center" id="doctorNameOutput"></p>
+    </div>
+
+    <div class="relationship" id="appointment" onclick="highlightRelationship('appointment')">
+      <h2 class="relationship-title text-center">Appointment</h2>
+      <p class="relationship-description" id="patientNameRelation"></p>
+      <p class="relationship-description" id="doctorNameRelation"></p>
+      <p class="attribute text-danger text-center" id="appointmentDateOutput"></p>
+    </div>
   </div>
 
-  <div class="entity" id="doctor" onclick="highlightEntity('doctor')">
-    <h2 class="entity-title">Doctor</h2>
-    <label for="doctorName">Name:</label>
-    <select id="doctorName">
-      <option value="Dr. John Doe">Dr. John Doe</option>
-      <option value="Dr. Jane Smith">Dr. Jane Smith</option>
-      <option value="Dr. Michael Johnson">Dr. Michael Johnson</option>
-    </select>
-    <p class="attribute" id="doctorNameOutput"></p>
-  </div>
+  <script>
+    function highlightEntity(entityId) {
+      var entity = document.getElementById(entityId);
+      entity.classList.toggle("active");
+    }
 
-  <div class="relationship" id="appointment" onclick="highlightRelationship('appointment')">
-    <h2 class="relationship-title">Appointment</h2>
-    <p class="relationship-description" id="appointmentId"></p>
-    <p class="relationship-description" id="patientNameRelation"></p>
-    <p class="relationship-description" id="patientDateOfBirthRelation"></p>
-    <p class="relationship-description" id="doctorNameRelation"></p>
-    <p class="relationship-description" id="appointmentDate"></p>
-    <p class="relationship-description" id="appointmentTime"></p>
-  </div>
+    function highlightRelationship(relationshipId) {
+      var relationship = document.getElementById(relationshipId);
+      relationship.classList.toggle("active");
+    }
+
+    function generateRandomData() {
+      var patientName = document.getElementById("patientName").value;
+      var patientDateOfBirth = document.getElementById("patientDateOfBirth").value;
+      var doctorName = document.getElementById("doctorName").value;
+      var appointmentDate = new Date().toLocaleDateString();
+
+      document.getElementById("patientNameOutput").textContent = "Patient Name: " + patientName;
+      document.getElementById("patientDateOfBirthOutput").textContent = "Date of Birth: " + patientDateOfBirth;
+      document.getElementById("doctorNameOutput").textContent = "Doctor Name: " + doctorName;
+      document.getElementById("appointmentDateOutput").textContent = "Appointment Date: " + appointmentDate;
+    }
+  </script>
 </body>
 </html>
